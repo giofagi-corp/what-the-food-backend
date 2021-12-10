@@ -8,8 +8,8 @@ const Ingredient = require("../models/Ingredient.model");
 
 router.post("/ingredient/create", async (req, res) => {
   try {
-    const { img, name, quantity, type } = req.body;
-    const newIngredient = await Ingredient.create({ img, name, quantity, type })
+    const { img, name, type } = req.body;
+    const newIngredient = await Ingredient.create({ img, name, type })
       .res.status(201)
       .json(newIngredient);
   } catch (err) {
@@ -33,11 +33,3 @@ router.delete("/ingredient/:ingredientId", async(req,res)=>{
 })
 
 //SEARCH AN INGREDIENT 
-
-router.get("/ingredient/:ingredient")
-
-
-
-
-
-
