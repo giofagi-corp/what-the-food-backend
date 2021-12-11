@@ -51,10 +51,10 @@ router.get(`/recipe`, async(req,res)=>{
 
 //SEARCH A RECIPE BY CUISINE
 
-router.get("/recipe/recipeByCuisine/:recipeId", async (req, res) => {
+router.get("/recipe/recipeByCuisine", async (req, res) => {
   try {
-    const { cuisineId } = req.params;
-    const recipeByCuisine = await Recipe.findById(cuisineId);
+    const { cuisine } = req.query;
+    const recipeByCuisine = await Recipe.find({cuisine: cuisine});
     res.status(200).json(recipeByCuisine);
   } catch (err) {
     console.log(err);
