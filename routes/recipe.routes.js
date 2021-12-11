@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+const  ObjectId = require('mongodb').ObjectId;
 
 const Recipe = require("../models/Recipe.model");
 
@@ -36,13 +37,30 @@ router.delete("/recipe/:recipeId", async (req, res) => {
   }
 });
 
+//EDIT A RECIPE  
+
+router.put("/recipe/:recipeId", async(req,res)=>{
+  try{
+    const {recipeId} = req.params 
+    const editRecipe = await Recipe.findByIdAndUpdate(recipeId,req.body,{new:true})
+    res.status(200).json(editRecipe)
+  }
+  catch(err){
+    console.log(err)
+  }
+})
+
 //SEARCH A RECIPE BY ING
 
 router.get(`/recipe`, async(req,res)=>{
   try{
     const {ingredients} = req.query
-    const recipeByIngredient = await Recipe.find({ingredients:[ingredients]})
+    const ArrIngredients = ingredients.split(" ")
+
+    console.log("Queery -->>",ArrIngredients)
+    const recipeByIngredient = await Recipe.find({ingredients:{$in:[ObjectId(ingredients)]}})
     res.status(200).json(recipeByIngredient)
+
   }
   catch(err){
     console.log(err)
