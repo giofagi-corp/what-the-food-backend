@@ -32,4 +32,19 @@ router.delete("/ingredient/:ingredientId", async(req,res)=>{
     }
 })
 
+// EDIT AN INGREDIENT 
+
+router.put("/ingredient/:ingredientId",async(req,res)=>{
+  try{
+    const{ingredientId} = req.params 
+    console.log("---->",ingredientId)
+    const editIngredient = await Ingredient.findByIdAndUpdate(ingredientId,req.body,{new:true})
+   
+    res.status(200).json(editIngredient)
+  }
+  catch(err){
+    console.log(err)
+  }
+})
+
 //SEARCH AN INGREDIENT 
