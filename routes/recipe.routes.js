@@ -61,4 +61,17 @@ router.get("/recipe/recipeByCuisine", async (req, res) => {
   }
 });
 
+router.get("/recipe/topCuisine", async (req, res) => {
+  try{
+    const { cuisine  } = req.query;
+    const recipeByCuisine = await Recipe.find({cuisine: cuisine});
+    console.log("recipeByCuisine------> ", recipeByCuisine)
+  }catch(err){
+    console.log(err)
+  }
+})
+
+
+
 module.exports = router;
+
