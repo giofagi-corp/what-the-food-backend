@@ -9,7 +9,7 @@ const Recipe = require("../models/Recipe.model");
 
 router.post("/recipe/create", async (req, res) => {
   try {
-    const { name, ingredients, time, description, cuisine } = req.body;
+    const { name, ingredients, time, description, cuisine, diet, rating } = req.body;
 
     const newRecipe = await Recipe.create({
       name,
@@ -17,6 +17,8 @@ router.post("/recipe/create", async (req, res) => {
       time,
       description,
       cuisine,
+      diet, 
+      rating
     });
 
     res.status(201).json(newRecipe);
@@ -37,13 +39,26 @@ router.delete("/recipe/:recipeId", async (req, res) => {
   }
 });
 
-//EDIT A RECIPE  
+//EDIT-UPDATE A RECIPE  
 
 router.put("/recipe/:recipeId", async(req,res)=>{
   try{
     const {recipeId} = req.params 
     const editRecipe = await Recipe.findByIdAndUpdate(recipeId,req.body,{new:true})
     res.status(200).json(editRecipe)
+  }
+  catch(err){
+    console.log(err)
+  }
+})
+
+// SEARCH TOP RECIPIES 
+
+router.get("/top-recipies", async(req,res)=>{
+  try{
+
+    const topRecipies = await Recipe.find().sort({rating:-1}).limit(3)
+    res.status(200).json(topRecipies)
   }
   catch(err){
     console.log(err)
