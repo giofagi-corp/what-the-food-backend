@@ -125,4 +125,13 @@ router.get("/recipe/topCuisine", async (req, res) => {
     }
 });
 
+router.get("/recipe/listAllRecipes", async (req, res) => {
+    try {
+        const listAllRecipes = await Recipe.find()
+        res.status(200).json(listAllRecipes);
+    }catch(err){
+        console.log(err);
+    }
+})
+
 module.exports = router;
