@@ -8,6 +8,7 @@ const Recipe = require("../models/Recipe.model");
 //CREATE A RECIPE:
 
 router.post("/recipe/create", async (req, res) => {
+
     try {
         const { name, ingredients, time, description, cuisine, diet, rating } = req.body;
 
@@ -25,6 +26,7 @@ router.post("/recipe/create", async (req, res) => {
     } catch (err) {
         console.log(err);
     }
+
 });
 
 //DELETE A RECIPE
@@ -39,19 +41,33 @@ router.delete("/recipe/:recipeId", async (req, res) => {
     }
 });
 
-//EDIT A RECIPE
 
-router.put("/recipe/:recipeId", async (req, res) => {
-    try {
-        const { recipeId } = req.params;
-        const editRecipe = await Recipe.findByIdAndUpdate(recipeId, req.body, {
-            new: true,
-        });
-        res.status(200).json(editRecipe);
-    } catch (err) {
-        console.log(err);
-    }
-});
+//EDIT-UPDATE A RECIPE  
+
+router.put("/recipe/:recipeId", async(req,res)=>{
+  try{
+    const {recipeId} = req.params 
+    const editRecipe = await Recipe.findByIdAndUpdate(recipeId,req.body,{new:true})
+    res.status(200).json(editRecipe)
+  }
+  catch(err){
+    console.log(err)
+  }
+})
+
+
+// SEARCH TOP RECIPIES 
+
+router.get("/top-recipies", async(req,res)=>{
+  try{
+
+    const topRecipies = await Recipe.find().sort({rating:-1}).limit(3)
+    res.status(200).json(topRecipies)
+  }
+  catch(err){
+    console.log(err)
+  }
+})
 
 //SEARCH A RECIPE BY ING
 

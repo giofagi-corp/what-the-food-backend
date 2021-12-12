@@ -130,5 +130,19 @@ router.get('/verify', isAuthenticated, (req, res, next) => {
   res.status(200).json(req.payload);
 });
 
+// EDIT  A USER   ( route goes /auth/profile/:userId) 
+
+router.put("/profile/:userId",async(req,res)=>{
+  try{
+    const{userId} = req.params 
+    console.log("---->",userId)
+    const editUser  = await User.findByIdAndUpdate(userId,req.body,{new:true})
+   
+    res.status(200).json(editUser)
+  }
+  catch(err){
+    console.log(err)
+  }
+})
 
 module.exports = router;
