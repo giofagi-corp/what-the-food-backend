@@ -18,7 +18,7 @@ const recipeRouter = require("./routes/recipe.routes");
 app.use("/api", recipeRouter);
 
 const ingredientRouter = require("./routes/ingredient.routes");
-//app.use("/api", isAuthenticated, ingredientRouter);
+// app.use("/api", isAuthenticated, ingredientRouter);
 app.use("/api", ingredientRouter);
 
 const authRouter = require("./routes/auth.routes");

@@ -37,7 +37,7 @@ router.delete("/ingredient/:ingredientId", async(req,res)=>{
 router.put("/ingredient/:ingredientId",async(req,res)=>{
   try{
     const{ingredientId} = req.params 
-    console.log("---->",ingredientId)
+    // console.log("---->",ingredientId)
     const editIngredient = await Ingredient.findByIdAndUpdate(ingredientId,req.body,{new:true})
    
     res.status(200).json(editIngredient)
@@ -48,6 +48,21 @@ router.put("/ingredient/:ingredientId",async(req,res)=>{
 })
 
 // SEARCH TOP INGREDIENTS 
+
+router.get("/top-ingredients/", async(req,res)=>{
+  try{
+    const allIng= await Ingredient.find()
+    allIngredients.map((el)=> el.rating = 0 )
+    console.log("------->",allIng)
+    // const allRecipes = await Recipe.find()
+    // console.log(topRecipies)
+    res.status(200)
+
+  }
+  catch(err){
+    console.log(err)
+  }
+})
 
 
 
