@@ -76,7 +76,7 @@ router.get(`/recipe`, async (req, res) => {
         const { ingredients } = req.query;
         const ArrIngredients = ingredients.split(" ");
 
-        console.log("Queery -->>", ArrIngredients);
+        //console.log("Queery -->>", ArrIngredients);
         const recipeByIngredient = await Recipe.find({
             ingredients: { $in: [ObjectId(ingredients)] },
         });
@@ -98,44 +98,36 @@ router.get("/recipe/recipeByCuisine", async (req, res) => {
     }
 });
 
-//ORDER BY RATING
+// TOP CUISINE
 
 router.get("/recipe/topCuisine", async (req, res) => {
     try {
-        const recipeByCuisine = await Recipe.find()
-
-        console.log("-------------> ",recipeByCuisine);
-
-        let arrCuisine = []
-        let arrCuisinePopularity = []
-
-        recipeByCuisine.map((elCuisine) => {
-            if(!arrCuisine.includes(elCuisine.cuisine)) arrCuisine.push(elCuisine.cuisine)     
-        });
-        arrCuisine.map((el)=>{
-            arrCuisinePopularity.push({name: `${el}`, popularity: 0})
-        })
-        recipeByCuisine.map((elCuisine) => {
-            arrCuisinePopularity.forEach((cuisineType)=>{
-            if(cuisineType.name === elCuisine.cuisine) {
-                let index = arrCuisinePopularity.indexOf(cuisineType)
-                arrCuisinePopularity[index].popularity++
+        const recipeByCuisine = await Recipe.aggregate([
+            {
+              $sortByCount: "$cuisine"
+            },
+            {
+              "$limit": 3
             }
-          })
-        }) 
-        arrCuisinePopularity.sort(function (a, b) {
-            if (a.popularity > b.popularity) return 1
-            if (a.popularity < b.popularity) return -1
-            return 0;
-          }).reverse()
-        
-        console.log("arrCuisineRating ------> ", arrCuisinePopularity.slice(0, 3)) 
+          ])
+               
+          let topCuisine = await Promise.all(
+            recipeByCuisine.map(async (el)=>{
+                try{
+                    const recipe = await Recipe.find({ cuisine: el._id }).limit(1)
+                    return {cuisine: el._id, count: el.count, imageUrl: recipe[0].imageUrl}
+                }catch(err){
+                    console.log(err);
+                }
+            }))
 
-        res.status(200).json(arrCuisinePopularity.slice(0, 3));
+        res.status(200).json(topCuisine);
     } catch (err) {
         console.log(err);
     }
 });
+
+// ALL RECIPES
 
 router.get("/recipe/listAllRecipes", async (req, res) => {
     try {
@@ -144,6 +136,7 @@ router.get("/recipe/listAllRecipes", async (req, res) => {
     }catch(err){
         console.log(err);
     }
+
 })
 
 module.exports = router;
