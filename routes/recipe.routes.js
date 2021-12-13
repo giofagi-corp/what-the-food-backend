@@ -107,17 +107,27 @@ router.get("/recipe/topCuisine", async (req, res) => {
         let arrCuisineRating = []
 
         recipeByCuisine.map((elCuisine) => {
-            if(!arrCuisine.includes(elCuisine.cuisine)) arrCuisine.push(elCuisine.cuisine)
+            if(!arrCuisine.includes(elCuisine.cuisine)) arrCuisine.push(elCuisine.cuisine)     
         });
 
-        recipeByCuisine.map((elCuisine) => {
-          arrCuisine.forEach((cuisineType)=>{
-            console.log("cuisineType ------------> ", cuisineType)
-            console.log("elCuisine.cuisine ------> ", elCuisine.cuisine)
-            if(cuisineType === leCuisine.cuisine) console.log(leCuisine.cuisine)
-          })
+        arrCuisine.map((el)=>{
+            arrCuisineRating.push({name: `${el}`, rating: 0})
         })
-        console.log("arrCuisine -------> ", arrCuisine)
+
+        recipeByCuisine.map((elCuisine) => {
+            arrCuisineRating.forEach((cuisineType)=>{
+            if(cuisineType.name === elCuisine.cuisine) {
+                let index = arrCuisineRating.indexOf(cuisineType)
+                arrCuisineRating[index].rating++
+            }
+          })
+        }) 
+        
+        /////////////////////////////
+        arrCuisineRating.sort()
+        
+        console.log("arrCuisineRating ------> ", arrCuisineRating) 
+
 
         res.status(200).json(recipeByCuisine);
     } catch (err) {
