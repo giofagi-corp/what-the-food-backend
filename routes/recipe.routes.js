@@ -115,7 +115,7 @@ router.get("/recipe/topCuisine", async (req, res) => {
             recipeByCuisine.map(async (el)=>{
                 try{
                     const recipe = await Recipe.find({ cuisine: el._id }).limit(1)
-                    return {cuisine: el._id, count: el.count, imageUrl: recipe[0].imageUrl}
+                    return {name: el._id, count: el.count, imageUrl: recipe[0].imageUrl}
                 }catch(err){
                     console.log(err);
                 }
