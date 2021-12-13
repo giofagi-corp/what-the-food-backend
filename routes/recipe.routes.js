@@ -76,7 +76,7 @@ router.get(`/recipe`, async (req, res) => {
         const { ingredients } = req.query;
         const ArrIngredients = ingredients.split(" ");
 
-        console.log("Queery -->>", ArrIngredients);
+        //console.log("Queery -->>", ArrIngredients);
         const recipeByIngredient = await Recipe.find({
             ingredients: { $in: [ObjectId(ingredients)] },
         });
@@ -98,42 +98,36 @@ router.get("/recipe/recipeByCuisine", async (req, res) => {
     }
 });
 
-//ORDER BY RATING
+// TOP CUISINE
 
 router.get("/recipe/topCuisine", async (req, res) => {
     try {
-        const recipeByCuisine = await Recipe.find().sort({cuisine: 1}).sort({rating: 1});
-        let arrCuisine = []
-        let arrCuisineRating = []
-
-        recipeByCuisine.map((elCuisine) => {
-            if(!arrCuisine.includes(elCuisine.cuisine)) arrCuisine.push(elCuisine.cuisine)     
-        });
-
-        arrCuisine.map((el)=>{
-            arrCuisineRating.push({name: `${el}`, rating: 0})
-        })
-
-        recipeByCuisine.map((elCuisine) => {
-            arrCuisineRating.forEach((cuisineType)=>{
-            if(cuisineType.name === elCuisine.cuisine) {
-                let index = arrCuisineRating.indexOf(cuisineType)
-                arrCuisineRating[index].rating++
+        const recipeByCuisine = await Recipe.aggregate([
+            {
+              $sortByCount: "$cuisine"
+            },
+            {
+              "$limit": 3
             }
-          })
-        }) 
-        
-        /////////////////////////////
-        arrCuisineRating.sort()
-        
-        console.log("arrCuisineRating ------> ", arrCuisineRating) 
+          ])
+               
+          let topCuisine = await Promise.all(
+            recipeByCuisine.map(async (el)=>{
+                try{
+                    const recipe = await Recipe.find({ cuisine: el._id }).limit(1)
+                    return {cuisine: el._id, count: el.count, imageUrl: recipe[0].imageUrl}
+                }catch(err){
+                    console.log(err);
+                }
+            }))
 
-
-        res.status(200).json(recipeByCuisine);
+        res.status(200).json(topCuisine);
     } catch (err) {
         console.log(err);
     }
 });
+
+// ALL RECIPES
 
 router.get("/recipe/listAllRecipes", async (req, res) => {
     try {
@@ -142,6 +136,7 @@ router.get("/recipe/listAllRecipes", async (req, res) => {
     }catch(err){
         console.log(err);
     }
+
 })
 
 module.exports = router;
