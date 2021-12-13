@@ -135,6 +135,7 @@ router.get("/recipe/topCuisine", async (req, res) => {
     }
 });
 
+
 router.get("/recipe/listAllRecipes", async (req, res) => {
     try {
         const listAllRecipes = await Recipe.find()
