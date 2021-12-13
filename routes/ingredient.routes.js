@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 
 const Ingredient = require("../models/Ingredient.model");
+const Recipe = require("../models/Recipe.model");
 
 //CREATE AN INGREDIENT
 
@@ -49,16 +50,22 @@ router.put("/ingredient/:ingredientId",async(req,res)=>{
 
 // SEARCH TOP INGREDIENTS 
 
-router.get("/top-ingredients", async(req,res)=>{
-
-  try{
-    const topIngredients = await Ingredient.find().sort({rating:-1}).limit(3)
-    console.log("topIngredients -------> ", topIngredients);
-    res.status(200).json(topIngredients)
+router.get("/top-ingredients", async (req, res) => {
+  try {
+      const popularIngredients = await Recipe.aggregate([
+          { $unwind: "$ingredients" },  { $sortByCount: "$ingredients" }, { "$limit": 3 }
+        ])
+        const topIngredients = await Promise.all(
+          popularIngredients.map(async (el)=>{
+              try{
+                  const ingredient = await Ingredient.findById(el)
+                  return {name: ingredient.name, imageUrl: ingredient.img}
+              }catch(err){
+                  console.log(err);
+              }
+          }))
+      res.status(200).json(topIngredients);
+  } catch (err) {
+      console.log(err);
   }
-  catch(err){
-    console.log(err)
-  }
-})
-
-
+});
