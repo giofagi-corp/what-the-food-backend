@@ -102,34 +102,36 @@ router.get("/recipe/recipeByCuisine", async (req, res) => {
 
 router.get("/recipe/topCuisine", async (req, res) => {
     try {
-        const recipeByCuisine = await Recipe.find().sort({cuisine: 1}).sort({rating: 1});
+        const recipeByCuisine = await Recipe.find()
+
+        console.log("-------------> ",recipeByCuisine);
+
         let arrCuisine = []
-        let arrCuisineRating = []
+        let arrCuisinePopularity = []
 
         recipeByCuisine.map((elCuisine) => {
             if(!arrCuisine.includes(elCuisine.cuisine)) arrCuisine.push(elCuisine.cuisine)     
         });
-
         arrCuisine.map((el)=>{
-            arrCuisineRating.push({name: `${el}`, rating: 0})
+            arrCuisinePopularity.push({name: `${el}`, popularity: 0})
         })
-
         recipeByCuisine.map((elCuisine) => {
-            arrCuisineRating.forEach((cuisineType)=>{
+            arrCuisinePopularity.forEach((cuisineType)=>{
             if(cuisineType.name === elCuisine.cuisine) {
-                let index = arrCuisineRating.indexOf(cuisineType)
-                arrCuisineRating[index].rating++
+                let index = arrCuisinePopularity.indexOf(cuisineType)
+                arrCuisinePopularity[index].popularity++
             }
           })
         }) 
+        arrCuisinePopularity.sort(function (a, b) {
+            if (a.popularity > b.popularity) return 1
+            if (a.popularity < b.popularity) return -1
+            return 0;
+          }).reverse()
         
-        /////////////////////////////
-        arrCuisineRating.sort()
-        
-        console.log("arrCuisineRating ------> ", arrCuisineRating) 
+        console.log("arrCuisineRating ------> ", arrCuisinePopularity.slice(0, 3)) 
 
-
-        res.status(200).json(recipeByCuisine);
+        res.status(200).json(arrCuisinePopularity.slice(0, 3));
     } catch (err) {
         console.log(err);
     }
