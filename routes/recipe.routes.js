@@ -60,7 +60,6 @@ router.put("/recipe/:recipeId", async(req,res)=>{
 
 router.get("/top-recipies", async(req,res)=>{
   try{
-
     const topRecipies = await Recipe.find().sort({rating:-1}).limit(3)
     res.status(200).json(topRecipies)
   }

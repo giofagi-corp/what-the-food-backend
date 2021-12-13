@@ -49,22 +49,16 @@ router.put("/ingredient/:ingredientId",async(req,res)=>{
 
 // SEARCH TOP INGREDIENTS 
 
-router.get("/top-ingredients/", async(req,res)=>{
-  try{
-    const allIng= await Ingredient.find()
-    allIngredients.map((el)=> el.rating = 0 )
-    console.log("------->",allIng)
-    // const allRecipes = await Recipe.find()
-    // console.log(topRecipies)
-    res.status(200)
+router.get("/top-ingredients", async(req,res)=>{
 
+  try{
+    const topIngredients = await Ingredient.find().sort({rating:-1}).limit(3)
+    console.log("topIngredients -------> ", topIngredients);
+    res.status(200).json(topIngredients)
   }
   catch(err){
     console.log(err)
   }
 })
-
-
-
 
 
