@@ -75,6 +75,8 @@ router.get("/top-ingredients", async (req, res) => {
 // SEARCH by INGREDIENTS 
 
 router.get("/recipes", async (req, res) => {
+  // const ingredientName = req.query.name
+  // console.log("IngredientName-------------->", ingredientName)
   const arrIngredientsID  = req.query.ingredients.split(" ")
   try {
     const filteredRecipes = await Recipe.find({ingredients: { $in: arrIngredientsID}  })
