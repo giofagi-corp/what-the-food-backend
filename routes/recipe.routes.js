@@ -20,7 +20,7 @@ router.post("/recipe/create", async (req, res) => {
             cuisine,
             diet,
             rating,
-        });
+        })
 
         res.status(201).json(newRecipe);
     } catch (err) {
@@ -70,20 +70,20 @@ router.get("/top-recipies", async(req,res)=>{
 
 //SEARCH A RECIPE BY ING
 
-router.get(`/recipe`, async (req, res) => {
-    try {
-        const { ingredients } = req.query;
-        const ArrIngredients = ingredients.split(" ");
+// router.get(`/recipe`, async (req, res) => {
+//     try {
+//         const { ingredients } = req.query;
+//         const ArrIngredients = ingredients.split(" ");
 
-        //console.log("Queery -->>", ArrIngredients);
-        const recipeByIngredient = await Recipe.find({
-            ingredients: { $in: [ObjectId(ingredients)] },
-        });
-        res.status(200).json(recipeByIngredient);
-    } catch (err) {
-        console.log(err);
-    }
-});
+//         //console.log("Queery -->>", ArrIngredients);
+//         const recipeByIngredient = await Recipe.find({
+//             ingredients: { $in: [ObjectId(ingredients)] },
+//         });
+//         res.status(200).json(recipeByIngredient);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// });
 
 //SEARCH A RECIPE BY CUISINE
 
@@ -102,12 +102,7 @@ router.get("/recipe/recipeByCuisine", async (req, res) => {
 router.get("/recipe/topCuisine", async (req, res) => {
     try {
         const recipeByCuisine = await Recipe.aggregate([
-            {
-              $sortByCount: "$cuisine"
-            },
-            {
-              "$limit": 3
-            }
+            {$sortByCount: "$cuisine"},{"$limit": 3}
           ])
                
           let topCuisine = await Promise.all(
