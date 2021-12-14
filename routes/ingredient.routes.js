@@ -109,21 +109,14 @@ router.get("/recipes", async (req, res) => {
 });
 
 
-//SEARCH AN INGREDIENT
+//FIND AN INGREDIENT
 
-router.post("/search-ingredient", async (req, res) => {
-  const { ingredient:name } = req.body;
+router.post("/search", async (req, res) => {
+  const ingredient = req.body.name;
   try {
-    const ingredientFound = await Ingredient.find({ name: name });
-    console.log("ing FOUND---->", ingredientFound);
-    if (ingredientFound.length === 0) {
-      const newIngredient = await Ingredient.create({ name });
-      console.log("ing CREATED----->", newIngredient);
-      res.status(201).json(newIngredient);
-    } else {
-      res.status(200).json(ingredientFound);
-    }
+    const ingredientFound = await Ingredient.find({ name: ingredient });
+    res.status(200).json(ingredientFound)
   } catch (err) {
     console.log(err);
   }
-});
+})
