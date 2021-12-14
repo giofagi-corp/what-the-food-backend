@@ -4,16 +4,34 @@ const mongoose = require("mongoose");
 
 const Ingredient = require("../models/Ingredient.model");
 const Recipe = require("../models/Recipe.model");
-let ObjectId = require('mongodb').ObjectId;
+let ObjectId = require("mongodb").ObjectId;
+
+//SEARCH AN INGREDIENT TO ADD TO A RECIPY ( Create Ingredient if it does not exist)
+
+router.post("/search-ingredient", async (req, res) => {
+  const { ingredient:name } = req.body;
+  try {
+    const ingredientFound = await Ingredient.find({ name: name });
+    console.log("ing FOUND---->", ingredientFound);
+    if (ingredientFound.length === 0) {
+      const newIngredient = await Ingredient.create({ name });
+      console.log("ing CREATED----->", newIngredient);
+      res.status(201).json(newIngredient);
+    } else {
+      res.status(200).json(ingredientFound);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 //CREATE AN INGREDIENT
 
 router.post("/ingredient/create", async (req, res) => {
   try {
     const { img, name, type } = req.body;
-    const newIngredient = await Ingredient.create({ img, name, type })
-      res.status(201)
-      .json(newIngredient);
+    const newIngredient = await Ingredient.create({ img, name, type });
+    res.status(201).json(newIngredient);
   } catch (err) {
     console.log(err);
   }
@@ -21,63 +39,69 @@ router.post("/ingredient/create", async (req, res) => {
 
 module.exports = router;
 
-//DELETE AN INGREDIENT 
+//DELETE AN INGREDIENT
 
-router.delete("/ingredient/:ingredientId", async(req,res)=>{
-    try{
-        const{ingredientId} = req.params 
-        await Ingredient.findByIdAndRemove(ingredientId)
-        res.status(200)
-    }
-    catch(err){
-        console.log(err)
-    }
-})
-
-// EDIT AN INGREDIENT 
-
-router.put("/ingredient/:ingredientId",async(req,res)=>{
-  try{
-    const{ingredientId} = req.params 
-    // console.log("---->",ingredientId)
-    const editIngredient = await Ingredient.findByIdAndUpdate(ingredientId,req.body,{new:true})
-   
-    res.status(200).json(editIngredient)
-  }
-  catch(err){
-    console.log(err)
-  }
-})
-
-// SEARCH TOP INGREDIENTS 
-
-router.get("/top-ingredients", async (req, res) => {
+router.delete("/ingredient/:ingredientId", async (req, res) => {
   try {
-      const popularIngredients = await Recipe.aggregate([
-          { $unwind: "$ingredients" },  { $sortByCount: "$ingredients" }, { "$limit": 3 }
-        ])
-        const topIngredients = await Promise.all(
-          popularIngredients.map(async (el)=>{
-              try{
-                  const ingredient = await Ingredient.findById(el)
-                  return {name: ingredient.name, imageUrl: ingredient.img}
-              }catch(err){
-                  console.log(err);
-              }
-          }))
-      res.status(200).json(topIngredients);
+    const { ingredientId } = req.params;
+    await Ingredient.findByIdAndRemove(ingredientId);
+    res.status(200);
   } catch (err) {
-      console.log(err);
+    console.log(err);
   }
 });
 
+// EDIT AN INGREDIENT
 
-// SEARCH by INGREDIENTS 
+router.put("/ingredient/:ingredientId", async (req, res) => {
+  try {
+    const { ingredientId } = req.params;
+    // console.log("---->",ingredientId)
+    const editIngredient = await Ingredient.findByIdAndUpdate(
+      ingredientId,
+      req.body,
+      { new: true }
+    );
+
+    res.status(200).json(editIngredient);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// SEARCH TOP INGREDIENTS
+
+router.get("/top-ingredients", async (req, res) => {
+  try {
+    const popularIngredients = await Recipe.aggregate([
+      { $unwind: "$ingredients" },
+      { $sortByCount: "$ingredients" },
+      { $limit: 3 },
+    ]);
+    const topIngredients = await Promise.all(
+      popularIngredients.map(async (el) => {
+        try {
+          const ingredient = await Ingredient.findById(el);
+          return { name: ingredient.name, imageUrl: ingredient.img };
+        } catch (err) {
+          console.log(err);
+        }
+      })
+    );
+    res.status(200).json(topIngredients);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// SEARCH by INGREDIENTS
 
 router.get("/recipes", async (req, res) => {
-  const arrIngredientsID  = req.query.ingredients.split(" ")
+  const arrIngredientsID = req.query.ingredients.split(" ");
   try {
-    const filteredRecipes = await Recipe.find({ingredients: { $in: arrIngredientsID}  })
+    const filteredRecipes = await Recipe.find({
+      ingredients: { $in: arrIngredientsID },
+    });
     res.status(200).json(filteredRecipes);
   } catch (err) {
     console.log(err);
