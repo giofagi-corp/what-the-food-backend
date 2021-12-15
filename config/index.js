@@ -19,7 +19,7 @@ module.exports = (app) => {
 
   app.use(
     cors({
-      origin: ["https://whatthefood-app.herokuapp.com/"],
+      origin: ["https://whatthefood-app.herokuapp.com"],
     })
   );
 
