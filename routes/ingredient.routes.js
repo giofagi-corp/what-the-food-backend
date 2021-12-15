@@ -94,7 +94,7 @@ router.get("/top-ingredients", async (req, res) => {
   }
 });
 
-// SEARCH by INGREDIENTS
+// SEARCH BY INGREDIENTS
 
 router.get("/recipes", async (req, res) => {
   const arrIngredientsID = req.query.ingredients.split(" ");
@@ -107,3 +107,18 @@ router.get("/recipes", async (req, res) => {
     console.log(err);
   }
 });
+
+
+//FIND AN INGREDIENT
+
+router.post("/search/:name", async (req, res) => {
+  console.log("req body ------->", req.params);
+  const ingredient = req.params.name;
+  try {
+    const ingredientFound = await Ingredient.find({ name: ingredient });
+    console.log("ingredient found -----------> ", ingredientFound);
+    res.status(200).json(ingredientFound)
+  } catch (err) {
+    console.log(err);
+  }
+})
