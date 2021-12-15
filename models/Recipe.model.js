@@ -5,7 +5,7 @@ const recipeSchema = new Schema({
   imageUrl: {
     type: String,
     default:
-      "https://st3.depositphotos.com/1859105/i/600/depositphotos_164009844-stock-photo-top-view-empty-dish-on.jpg",
+      "https://mir-s3-cdn-cf.behance.net/project_modules/fs/aacb8d54981539.59714c1193ea5.png",
   },
   name: { type: String, required: true },
   ingredients: [{ type: Schema.Types.ObjectId, ref: "Ingredient", default: [] },],
