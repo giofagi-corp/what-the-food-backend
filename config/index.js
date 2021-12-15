@@ -19,9 +19,15 @@ module.exports = (app) => {
 
   app.use(
     cors({
-      origin: ["http://localhost:3000"],
+      origin: ["https://whatthefood-app.herokuapp.com"],
     })
   );
+
+  // app.use(
+  //   cors({
+  //     origin: ["http://localhost:3000"],
+  //   })
+  // );
 
   // In development environment the app logs
   app.use(logger("dev"));

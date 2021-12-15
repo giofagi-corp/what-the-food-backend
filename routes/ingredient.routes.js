@@ -121,12 +121,11 @@ router.get("/recipes", async (req, res) => {
 //FIND AN INGREDIENT
 
 router.post("/search/:name", async (req, res) => {
-  console.log("req body ------->", req.params);
   const ingredient = req.params.name;
   try {
     const ingredientFound = await Ingredient.find({ name: ingredient });
-    console.log("ingredient found -----------> ", ingredientFound);
     res.status(200).json(ingredientFound)
+    
   } catch (err) {
     console.log(err);
   }
