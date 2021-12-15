@@ -9,7 +9,8 @@ let ObjectId = require("mongodb").ObjectId;
 //SEARCH AN INGREDIENT TO ADD TO A RECIPY ( Create Ingredient if it does not exist)
 
 router.post("/search-ingredient", async (req, res) => {
-  const { ingredient:name } = req.body;
+  console.log("REQ BODY---->",req.body)
+  const {ingredient:name } = req.body;
   try {
     const ingredientFound = await Ingredient.find({ name: name });
     console.log("ing FOUND---->", ingredientFound);
