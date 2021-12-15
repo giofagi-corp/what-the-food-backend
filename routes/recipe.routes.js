@@ -133,4 +133,19 @@ router.get("/recipe/listAllRecipes", async (req, res) => {
 
 })
 
+// SEARCH A RECIPE
+
+router.get("/recipe/:id", async (req, res) => {
+    const id = req.params.id
+    try {
+        const recipe = await Recipe.findById(id)
+        res.status(200).json(recipe);
+    }catch(err){
+        console.log(err);
+    }
+
+})
+
+
+
 module.exports = router;
