@@ -8,18 +8,16 @@ const Recipe = require("../models/Recipe.model");
 //CREATE A RECIPE:
 
 router.post("/recipe/create", async (req, res) => {
-
+    console.log("req body ------> ",req.body);
     try {
-        const { name, ingredients, time, description, cuisine, diet, rating } = req.body;
-
+        const { name, ingredients, time, description, cuisine } = req.body;
+        
         const newRecipe = await Recipe.create({
             name,
             ingredients,
             time,
             description,
-            cuisine,
-            diet,
-            rating,
+            cuisine
         })
 
         res.status(201).json(newRecipe);
@@ -132,5 +130,20 @@ router.get("/recipe/listAllRecipes", async (req, res) => {
     }
 
 })
+
+// SEARCH A RECIPE
+
+router.get("/recipe/:id", async (req, res) => {
+    const id = req.params.id
+    try {
+        const recipe = await Recipe.findById(id).populate("ingredients")
+        res.status(200).json(recipe);
+    }catch(err){
+        console.log(err);
+    }
+
+})
+
+
 
 module.exports = router;

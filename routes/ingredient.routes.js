@@ -6,7 +6,7 @@ const Ingredient = require("../models/Ingredient.model");
 const Recipe = require("../models/Recipe.model");
 let ObjectId = require("mongodb").ObjectId;
 
-//SEARCH AN INGREDIENT TO ADD TO A RECIPY ( Create Ingredient if it does not exist)
+/* //SEARCH AN INGREDIENT TO ADD TO A RECIPY ( Create Ingredient if it does not exist)
 
 router.post("/ingredient-create", async (req, res) => {
   console.log("REQ BODY---->",req.body)
@@ -16,6 +16,26 @@ router.post("/ingredient-create", async (req, res) => {
     console.log("ing FOUND---->", ingredientFound);
     if (ingredientFound.length === 0) {
       const newIngredient = await Ingredient.create({ name:name });
+      console.log("ing CREATED----->", newIngredient);
+      res.status(201).json(newIngredient);
+    } else {
+      res.status(200).json(ingredientFound);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}); */
+
+//SEARCH AN INGREDIENT TO ADD TO A RECIPY ( Create Ingredient if it does not exist)
+
+router.post("/search-ingredient/:name", async (req, res) => {
+  console.log("req.params.name------->", req.params.name)
+  const ingredient = req.params.name;
+  try {
+    const ingredientFound = await Ingredient.find({ name: ingredient });
+    console.log("ingredientFound----->",ingredientFound)
+    if (ingredientFound.length === 0) {
+      const newIngredient = await Ingredient.create({ name: ingredient });
       console.log("ing CREATED----->", newIngredient);
       res.status(201).json(newIngredient);
     } else {
@@ -121,6 +141,7 @@ router.get("/recipes", async (req, res) => {
 //FIND AN INGREDIENT
 
 router.post("/search/:name", async (req, res) => {
+  console.log("req.params.name------->", req.params.name)
   const ingredient = req.params.name;
   try {
     const ingredientFound = await Ingredient.find({ name: ingredient });
@@ -131,5 +152,7 @@ router.post("/search/:name", async (req, res) => {
   }
 })
 
+
+// SEARCH ALL INGREDIENTS 
 
 module.exports = router;
