@@ -8,18 +8,16 @@ const Recipe = require("../models/Recipe.model");
 //CREATE A RECIPE:
 
 router.post("/recipe/create", async (req, res) => {
-
+    console.log("req body ------> ",req.body);
     try {
-        const { name, ingredients, time, description, cuisine, diet, rating } = req.body;
-
+        const { name, ingredients, time, description, cuisine } = req.body;
+        
         const newRecipe = await Recipe.create({
             name,
             ingredients,
             time,
             description,
-            cuisine,
-            diet,
-            rating,
+            cuisine
         })
 
         res.status(201).json(newRecipe);
