@@ -136,7 +136,7 @@ router.get("/recipe/listAllRecipes", async (req, res) => {
 router.get("/recipe/:id", async (req, res) => {
     const id = req.params.id
     try {
-        const recipe = await Recipe.findById(id)
+        const recipe = await Recipe.findById(id).populate("ingredients")
         res.status(200).json(recipe);
     }catch(err){
         console.log(err);
