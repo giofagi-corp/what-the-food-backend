@@ -50,7 +50,7 @@ router.post("/search-ingredient/:name", async (req, res) => {
 
 
 router.get("/search-all-ing", (req, res, next) => {
-  Ingredient.find()
+  Ingredient.find().sort({name: 1})
     .then((allIngredients) => res.json(allIngredients))
     .catch((err) => res.json(err));
 });
