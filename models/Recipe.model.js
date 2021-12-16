@@ -13,7 +13,7 @@ const recipeSchema = new Schema({
   description: [{ type: String }],
   cuisine: { type: String },
 
-  diet: { type: String, enum: ["vegan", "vegetarian", "gluten free",""] },
+  //diet: { type: String, enum: ["vegan", "vegetarian", "gluten free",""] },
 
 
   rating: { type: Number },
