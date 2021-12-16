@@ -8,14 +8,14 @@ let ObjectId = require("mongodb").ObjectId;
 
 /* //SEARCH AN INGREDIENT TO ADD TO A RECIPY ( Create Ingredient if it does not exist)
 
-router.post("/search-ingredient", async (req, res) => {
+router.post("/ingredient-create", async (req, res) => {
   console.log("REQ BODY---->",req.body)
   const {ingredient:name } = req.body;
   try {
     const ingredientFound = await Ingredient.find({ name: name });
     console.log("ing FOUND---->", ingredientFound);
     if (ingredientFound.length === 0) {
-      const newIngredient = await Ingredient.create({ name });
+      const newIngredient = await Ingredient.create({ name:name });
       console.log("ing CREATED----->", newIngredient);
       res.status(201).json(newIngredient);
     } else {
@@ -46,6 +46,15 @@ router.post("/search-ingredient/:name", async (req, res) => {
   }
 });
 
+// SEARCH ALL INGREDIENTS 
+
+
+router.get("/search-all-ing", (req, res, next) => {
+  Ingredient.find()
+    .then((allIngredients) => res.json(allIngredients))
+    .catch((err) => res.json(err));
+});
+
 //CREATE AN INGREDIENT
 
 router.post("/ingredient/create", async (req, res) => {
@@ -58,7 +67,6 @@ router.post("/ingredient/create", async (req, res) => {
   }
 });
 
-module.exports = router;
 
 //DELETE AN INGREDIENT
 
@@ -74,21 +82,21 @@ router.delete("/ingredient/:ingredientId", async (req, res) => {
 
 // EDIT AN INGREDIENT
 
-router.put("/ingredient/:ingredientId", async (req, res) => {
-  try {
-    const { ingredientId } = req.params;
-    // console.log("---->",ingredientId)
-    const editIngredient = await Ingredient.findByIdAndUpdate(
-      ingredientId,
-      req.body,
-      { new: true }
-    );
+// router.put("/ingredient/:ingredientId", async (req, res) => {
+//   try {
+//     const { ingredientId } = req.params;
+//     // console.log("---->",ingredientId)
+//     const editIngredient = await Ingredient.findByIdAndUpdate(
+//       ingredientId,
+//       req.body,
+//       { new: true }
+//     );
 
-    res.status(200).json(editIngredient);
-  } catch (err) {
-    console.log(err);
-  }
-});
+//     res.status(200).json(editIngredient);
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
 
 // SEARCH TOP INGREDIENTS
 
@@ -147,9 +155,4 @@ router.post("/search/:name", async (req, res) => {
 
 // SEARCH ALL INGREDIENTS 
 
-
-router.get("/search-all-ing", (req, res, next) => {
-  Ingredient.find()
-    .then((allIngredients) => res.json(allIngredients))
-    .catch((err) => res.json(err));
-});
+module.exports = router;
