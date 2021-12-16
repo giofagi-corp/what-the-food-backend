@@ -49,7 +49,7 @@ router.post("/search-ingredient/:name", async (req, res) => {
 // SEARCH ALL INGREDIENTS 
 
 
-router.get("/ingredients", (req, res, next) => {
+router.get("/search-all-ing", (req, res, next) => {
   Ingredient.find()
     .then((allIngredients) => res.json(allIngredients))
     .catch((err) => res.json(err));
