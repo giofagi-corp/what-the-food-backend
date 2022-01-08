@@ -7,7 +7,7 @@ const recipeSchema = new Schema({
     default:
       "https://mir-s3-cdn-cf.behance.net/project_modules/fs/aacb8d54981539.59714c1193ea5.png",
   },
-  name: { type: String, required: true },
+  name: { type: String, required: true, },
   ingredients: [{ type: Schema.Types.ObjectId, ref: "Ingredient", default: [] },],
   time: { type: Number },
   description: [{ type: String }],
