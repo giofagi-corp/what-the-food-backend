@@ -144,6 +144,20 @@ router.get("/recipe/:id", async (req, res) => {
 
 })
 
+// SEARCH A RECIPE BY NAME
+
+router.post("/recipe/:name", async (req, res) => {
+    console.log("recipe req.params.name------->", req.params.name)
+    const recipeName = req.params.name;
+    try {
+      const RecipeNameFound = await Recipe.find({ name: recipeName });
+      console.log("RecipeNameFound----->",RecipeNameFound)
+        res.status(200).json(RecipeNameFound);
+      
+    } catch (err) {
+      console.log(err);
+    }
+  });
 
 
 module.exports = router;
