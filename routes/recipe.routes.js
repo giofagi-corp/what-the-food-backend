@@ -10,9 +10,10 @@ const Recipe = require("../models/Recipe.model");
 router.post("/recipe/create", async (req, res) => {
     console.log("req body ------> ",req.body);
     try {
-        const { name, ingredients, time, description, cuisine } = req.body;
+        const { imageUrl, name, ingredients, time, description, cuisine } = req.body;
         
         const newRecipe = await Recipe.create({
+            imageUrl,
             name,
             ingredients,
             time,
@@ -82,6 +83,28 @@ router.get("/top-recipies", async(req,res)=>{
 //         console.log(err);
 //     }
 // });
+
+// TYPES OF CUISINE
+
+router.get("/cuisine", async (req, res) => {
+    try {
+        const recipe = await Recipe.find()
+        let cuisines = await Promise.all(
+            recipe.map(async (e)=>{
+                try{
+                    return e.cuisine
+                }catch(err){
+                    console.log(err);
+                }
+            })
+        )
+        const typesOfCuisine = [...new Set(cuisines)];
+        res.status(200).json(typesOfCuisine)    
+
+    }catch(err) {
+        console.log(err)
+    }
+})
 
 //SEARCH A RECIPE BY CUISINE
 
