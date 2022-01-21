@@ -115,9 +115,23 @@ router.get("/top-ingredients", async (req, res) => {
   }
 });
 
-// SEARCH BY INGREDIENTS
+// SEARCH BY INGREDIENT
 
 router.get("/recipes", async (req, res) => {
+  const arrIngredientsID = req.query.ingredients.split(" ");
+  try {
+    const filteredRecipes = await Recipe.find({
+      ingredients: { $in: arrIngredientsID },
+    });
+    res.status(200).json(filteredRecipes);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// FIND RECIPES BY SEVERAL INGREDIENTS
+
+router.get("/recipe", async (req, res) => {
   const arrIngredientsID = req.query.ingredients.split(" ");
   try {
     const filteredRecipes = await Recipe.find({
