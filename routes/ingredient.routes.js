@@ -119,6 +119,7 @@ router.get("/top-ingredients", async (req, res) => {
 
 router.get("/recipes", async (req, res) => {
   const arrIngredientsID = req.query.ingredients.split(" ");
+  console.log("arrIngredientsID----->",arrIngredientsID);
   try {
     const filteredRecipes = await Recipe.find({
       ingredients: { $in: arrIngredientsID },
@@ -135,7 +136,7 @@ router.get("/recipe", async (req, res) => {
   const arrIngredientsID = req.query.ingredients.split(" ");
   try {
     const filteredRecipes = await Recipe.find({
-      ingredients: { $in: arrIngredientsID },
+      ingredients: { $all: arrIngredientsID },
     });
     res.status(200).json(filteredRecipes);
   } catch (err) {
