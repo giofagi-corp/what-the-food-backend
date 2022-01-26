@@ -103,13 +103,14 @@ router.get("/top-ingredients", async (req, res) => {
       popularIngredients.map(async (el) => {
         try {
           const ingredient = await Ingredient.findById(el);
-          return { name: ingredient.name, imageUrl: ingredient.img };
+          return { name: ingredient.name, imageUrl: ingredient.img, _id: ingredient._id };
         } catch (err) {
           console.log(err);
         }
       })
     );
     res.status(200).json(topIngredients);
+    console.log(topIngredients);
   } catch (err) {
     console.log(err);
   }
