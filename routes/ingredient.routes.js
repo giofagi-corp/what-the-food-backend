@@ -169,3 +169,17 @@ router.get("/search-all-ing", (req, res, next) => {
     .then((allIngredients) => res.json(allIngredients))
     .catch((err) => res.json(err));
 });
+
+//FIND AN INGREDIENT BY ID
+
+router.get("/ingredient/:ingredientId", async (req, res) => {
+  try {
+    const { ingredientId } = req.params;
+    console.log("---->",ingredientId)
+    const ingredient = await Ingredient.findById(ingredientId);
+
+    res.status(200).json(ingredient);
+  } catch (err) {
+    console.log(err);
+  }
+});
