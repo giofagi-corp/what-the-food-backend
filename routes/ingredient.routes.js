@@ -103,25 +103,41 @@ router.get("/top-ingredients", async (req, res) => {
       popularIngredients.map(async (el) => {
         try {
           const ingredient = await Ingredient.findById(el);
-          return { name: ingredient.name, imageUrl: ingredient.img };
+          return { name: ingredient.name, imageUrl: ingredient.img, _id: ingredient._id };
         } catch (err) {
           console.log(err);
         }
       })
     );
     res.status(200).json(topIngredients);
+    console.log(topIngredients);
   } catch (err) {
     console.log(err);
   }
 });
 
-// SEARCH BY INGREDIENTS
+// SEARCH BY INGREDIENT
 
 router.get("/recipes", async (req, res) => {
   const arrIngredientsID = req.query.ingredients.split(" ");
+  console.log("arrIngredientsID----->",arrIngredientsID);
   try {
     const filteredRecipes = await Recipe.find({
       ingredients: { $in: arrIngredientsID },
+    });
+    res.status(200).json(filteredRecipes);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// FIND RECIPES BY SEVERAL INGREDIENTS
+
+router.get("/recipe", async (req, res) => {
+  const arrIngredientsID = req.query.ingredients.split(" ");
+  try {
+    const filteredRecipes = await Recipe.find({
+      ingredients: { $all: arrIngredientsID },
     });
     res.status(200).json(filteredRecipes);
   } catch (err) {
