@@ -191,3 +191,5 @@ router.get("/ingredient/:ingredientId", async (req, res) => {
     console.log(err);
   }
 });
+
+module.exports = router;
