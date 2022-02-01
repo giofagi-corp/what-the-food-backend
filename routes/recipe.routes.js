@@ -10,9 +10,10 @@ const Recipe = require("../models/Recipe.model");
 router.post("/recipe/create", async (req, res) => {
     console.log("req body ------> ",req.body);
     try {
-        const { name, ingredients, time, description, cuisine } = req.body;
+        const { imageUrl, name, ingredients, time, description, cuisine } = req.body;
         
         const newRecipe = await Recipe.create({
+            imageUrl,
             name,
             ingredients,
             time,
@@ -83,10 +84,33 @@ router.get("/top-recipies", async(req,res)=>{
 //     }
 // });
 
+// TYPES OF CUISINE
+
+router.get("/cuisine", async (req, res) => {
+    try {
+        const recipe = await Recipe.find()
+        let cuisines = await Promise.all(
+            recipe.map(async (e)=>{
+                try{
+                    return e.cuisine
+                }catch(err){
+                    console.log(err);
+                }
+            })
+        )
+        const typesOfCuisine = [...new Set(cuisines)];
+        res.status(200).json(typesOfCuisine)    
+
+    }catch(err) {
+        console.log(err)
+    }
+})
+
 //SEARCH A RECIPE BY CUISINE
 
 router.get("/recipe/recipeByCuisine", async (req, res) => {
     try {
+        console.log("req.query----->",req.query);
         const { cuisine } = req.query;
         const recipeByCuisine = await Recipe.find({ cuisine: cuisine });
         res.status(200).json(recipeByCuisine);
@@ -144,6 +168,20 @@ router.get("/recipe/:id", async (req, res) => {
 
 })
 
+// SEARCH A RECIPE BY NAME
+
+router.post("/recipe/:name", async (req, res) => {
+    console.log("recipe req.params.name------->", req.params.name)
+    const recipeName = req.params.name;
+    try {
+      const RecipeNameFound = await Recipe.find({ name: recipeName });
+      console.log("RecipeNameFound----->",RecipeNameFound)
+        res.status(200).json(RecipeNameFound);
+      
+    } catch (err) {
+      console.log(err);
+    }
+  });
 
 
 module.exports = router;

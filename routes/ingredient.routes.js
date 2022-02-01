@@ -111,25 +111,41 @@ router.get("/top-ingredients", async (req, res) => {
       popularIngredients.map(async (el) => {
         try {
           const ingredient = await Ingredient.findById(el);
-          return { name: ingredient.name, imageUrl: ingredient.img };
+          return { name: ingredient.name, imageUrl: ingredient.img, _id: ingredient._id };
         } catch (err) {
           console.log(err);
         }
       })
     );
     res.status(200).json(topIngredients);
+    console.log(topIngredients);
   } catch (err) {
     console.log(err);
   }
 });
 
-// SEARCH BY INGREDIENTS
+// SEARCH BY INGREDIENT
 
 router.get("/recipes", async (req, res) => {
   const arrIngredientsID = req.query.ingredients.split(" ");
+  console.log("arrIngredientsID----->",arrIngredientsID);
   try {
     const filteredRecipes = await Recipe.find({
       ingredients: { $in: arrIngredientsID },
+    });
+    res.status(200).json(filteredRecipes);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// FIND RECIPES BY SEVERAL INGREDIENTS
+
+router.get("/recipe", async (req, res) => {
+  const arrIngredientsID = req.query.ingredients.split(" ");
+  try {
+    const filteredRecipes = await Recipe.find({
+      ingredients: { $all: arrIngredientsID },
     });
     res.status(200).json(filteredRecipes);
   } catch (err) {
@@ -155,4 +171,23 @@ router.post("/search/:name", async (req, res) => {
 
 // SEARCH ALL INGREDIENTS 
 
-module.exports = router;
+
+router.get("/search-all-ing", (req, res, next) => {
+  Ingredient.find()
+    .then((allIngredients) => res.json(allIngredients))
+    .catch((err) => res.json(err));
+});
+
+//FIND AN INGREDIENT BY ID
+
+router.get("/ingredient/:ingredientId", async (req, res) => {
+  try {
+    const { ingredientId } = req.params;
+    console.log("---->",ingredientId)
+    const ingredient = await Ingredient.findById(ingredientId);
+
+    res.status(200).json(ingredient);
+  } catch (err) {
+    console.log(err);
+  }
+});
