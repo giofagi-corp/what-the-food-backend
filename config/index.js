@@ -19,7 +19,7 @@ module.exports = (app) => {
 
   app.use(
     cors({
-      origin: ["https://incomparable-zuccutto-55e12f.netlify.app", "http://localhost:3000"],
+      origin: ["https://66c4aea76321ea0e11be450c--what-the-food-frontend.netlify.app", "http://localhost:3000"],
     })
   );
 
